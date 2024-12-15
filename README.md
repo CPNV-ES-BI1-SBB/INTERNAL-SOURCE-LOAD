@@ -34,7 +34,7 @@ dotnet run
 ```
 
 You can go to
-[http://localhost:5067/swagger/](http://localhost:5067/swagger/index.html) to
+[http://localhost:5054/swagger/](http://localhost:5054/swagger/index.html) to
 see API endpoints.
 
 #### Test projects:
