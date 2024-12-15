@@ -163,5 +163,40 @@ namespace INTERNAL_SOURCE_LOAD_TEST
             // Assert
             ClassicAssert.AreEqual(expectedSql, result);
         }
+        [Test]
+        public void Post_ValidJson_UsesTrainJsonToSqlTransformerAndReturns201()
+        {
+            // Arrange
+            var jsonString = @"
+        {
+          ""name"": ""Yverdon-les-Bains"",
+          ""departures"": [
+            {
+              ""departureStationName"": ""Yverdon-les-Bains"",
+              ""destinationStationName"": ""Lausanne"",
+              ""viaStationNames"": [],
+              ""departureTime"": ""2024-12-09T08:00:00"",
+              ""train"": {
+                ""g"": ""IC"",
+                ""l"": ""5""
+              },
+              ""platform"": ""2"",
+              ""sector"": null
+            }
+          ]
+        }";
+
+            var jsonDocument = JsonDocument.Parse(jsonString);
+            var jsonElement = jsonDocument.RootElement;
+
+            // Act
+            var response = _controller.Post(jsonElement);
+
+            // Assert
+            ClassicAssert.IsInstanceOf<ObjectResult>(response);
+            var objectResult = (ObjectResult)response;
+            ClassicAssert.AreEqual(StatusCodes.Status201Created, objectResult.StatusCode);
+            ClassicAssert.AreEqual("Data loaded successfully.", objectResult.Value);
+        }
     }
 }   
