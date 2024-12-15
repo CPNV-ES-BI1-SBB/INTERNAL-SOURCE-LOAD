@@ -104,6 +104,64 @@ namespace INTERNAL_SOURCE_LOAD_TEST
             // Assert
             ClassicAssert.True(result);
         }
-        
+        [Test]
+        public void Transform_ValidJson_ReturnsExpectedSql()
+        {
+            // Arrange
+            var jsonString = @"
+    {
+      ""name"": ""Yverdon-les-Bains"",
+      ""departures"": [
+        {
+          ""departureStationName"": ""Yverdon-les-Bains"",
+          ""destinationStationName"": ""Lausanne"",
+          ""viaStationNames"": [
+            """"
+          ],
+          ""departureTime"": ""2024-12-09T08:00:00"",
+          ""train"": {
+            ""g"": ""IC"",
+            ""l"": ""5""
+          },
+          ""platform"": ""2"",
+          ""sector"": null
+        },
+        {
+          ""departureStationName"": ""Yverdon-les-Bains"",
+          ""destinationStationName"": ""Fribourg/Freiburg"",
+          ""viaStationNames"": [
+            ""Yverdon-Champ Pittet"",
+            ""Yvonand"",
+            ""Cheyres"",
+            ""Payerne""
+          ],
+          ""departureTime"": ""2024-12-09T13:18:00"",
+          ""train"": {
+            ""g"": ""S"",
+            ""l"": ""30""
+          },
+          ""platform"": ""3"",
+          ""sector"": ""D""
+        }
+      ]
+    }";
+
+            var expectedSql =
+                "INSERT INTO TrainDepartures (DepartureStationName, DestinationStationName, ViaStationNames, DepartureTime, TrainGroup, TrainLine, Platform, Sector) " +
+                "VALUES ('Yverdon-les-Bains', 'Lausanne', '', '2024-12-09 08:00:00', 'IC', '5', '2', NULL);\n" +
+                "INSERT INTO TrainDepartures (DepartureStationName, DestinationStationName, ViaStationNames, DepartureTime, TrainGroup, TrainLine, Platform, Sector) " +
+                "VALUES ('Yverdon-les-Bains', 'Fribourg/Freiburg', 'Yverdon-Champ Pittet,Yvonand,Cheyres,Payerne', '2024-12-09 13:18:00', 'S', '30', '3', 'D');";
+
+            var jsonDocument = JsonDocument.Parse(jsonString);
+            var jsonElement = jsonDocument.RootElement;
+
+            var transformer = new TrainJsonToSqlTransformer();
+
+            // Act
+            var result = transformer.Transform(jsonElement);
+
+            // Assert
+            ClassicAssert.AreEqual(expectedSql, result);
+        }
     }
 }   
