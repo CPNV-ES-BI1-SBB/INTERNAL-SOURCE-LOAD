@@ -12,7 +12,7 @@ Client -> Controller : POST /load (jsonData)
 Controller -> Transformer : CanHandle(jsonData)
 alt Transformer can handle jsonData
     Controller -> Transformer : Transform(jsonData)
-    Transformer -> Transformer : GenerateSql(trainStation)
+    Transformer -> Transformer : GenerateSql()
     Transformer --> Controller : SQL Query
     Controller -> Executor : Execute(sqlQuery)
     Executor --> Controller : bool
