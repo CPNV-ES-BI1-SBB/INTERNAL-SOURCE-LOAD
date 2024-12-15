@@ -19,13 +19,6 @@ This is the **Load** part.
 
 ### Getting started
 
-#### Build the project:
-
-```shell
-dotnet restore
-dotnet build
-```
-
 #### Run the api locally
 
 ```shell
