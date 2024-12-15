@@ -198,5 +198,22 @@ namespace INTERNAL_SOURCE_LOAD_TEST
             ClassicAssert.AreEqual(StatusCodes.Status201Created, objectResult.StatusCode);
             ClassicAssert.AreEqual("Data loaded successfully.", objectResult.Value);
         }
+        [Test]
+        public void Post_InvalidJson_ReturnsBadRequest()
+        {
+            // Arrange
+            string jsonString = @"{ ""invalid"": true }";
+            JsonDocument jsonDocument = JsonDocument.Parse(jsonString);
+            JsonElement jsonElement = jsonDocument.RootElement;
+
+            // Act
+            var response = _controller.Post(jsonElement);
+
+            // Assert
+            ClassicAssert.IsInstanceOf<BadRequestObjectResult>(response);
+            var badRequestResult = (BadRequestObjectResult)response;
+            ClassicAssert.AreEqual(StatusCodes.Status400BadRequest, badRequestResult.StatusCode);
+            ClassicAssert.AreEqual("No suitable transformer found for the provided data.", badRequestResult.Value);
+        }
     }
 }   
