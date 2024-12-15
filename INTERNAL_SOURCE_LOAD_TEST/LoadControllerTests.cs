@@ -22,5 +22,88 @@ namespace INTERNAL_SOURCE_LOAD_TEST
             _controller = new LoadController(transformers);
         }
 
+        [Test]
+        public void CanHandle_ValidJsonStructure_ReturnsTrue()
+        {
+            // Arrange
+            var jsonString = @"
+    {
+      ""name"": ""Yverdon-les-Bains"",
+      ""departures"": [
+        {
+          ""departureStationName"": ""Yverdon-les-Bains"",
+          ""destinationStationName"": ""Lausanne"",
+          ""viaStationNames"": [
+            """"
+          ],
+          ""departureTime"": ""2024-12-09T08:00:00"",
+          ""train"": {
+            ""g"": ""IC"",
+            ""l"": ""5""
+          },
+          ""platform"": ""2"",
+          ""sector"": null
+        },
+        {
+          ""departureStationName"": ""Yverdon-les-Bains"",
+          ""destinationStationName"": ""Fribourg/Freiburg"",
+          ""viaStationNames"": [
+            ""Yverdon-Champ Pittet"",
+            ""Yvonand"",
+            ""Cheyres"",
+            ""Payerne""
+          ],
+          ""departureTime"": ""2024-12-09T13:18:00"",
+          ""train"": {
+            ""g"": ""S"",
+            ""l"": ""30""
+          },
+          ""platform"": ""3"",
+          ""sector"": ""D""
+        },
+        {
+          ""departureStationName"": ""Yverdon-les-Bains"",
+          ""destinationStationName"": ""Genève Aéroport"",
+          ""viaStationNames"": [
+            ""Morges""
+          ],
+          ""departureTime"": ""2024-12-09T16:45:00"",
+          ""train"": {
+            ""g"": ""IC"",
+            ""l"": ""5""
+          },
+          ""platform"": ""2"",
+          ""sector"": null
+        },
+        {
+          ""departureStationName"": ""Yverdon-les-Bains"",
+          ""destinationStationName"": ""Rorschar"",
+          ""viaStationNames"": [
+            ""Neuchâtel"",
+            ""Biel/Bienne"",
+            ""Olten"",
+            ""St. Gallen""
+          ],
+          ""departureTime"": ""2024-12-09T23:00:00"",
+          ""train"": {
+            ""g"": ""IC"",
+            ""l"": ""5""
+          },
+          ""platform"": ""1"",
+          ""sector"": null
+        }
+      ]
+    }";
+
+            var jsonDocument = JsonDocument.Parse(jsonString);
+            var jsonElement = jsonDocument.RootElement;
+
+            // Act
+            var result = _transformer.CanHandle(jsonElement);
+
+            // Assert
+            ClassicAssert.True(result);
+        }
+        
     }
 }   
