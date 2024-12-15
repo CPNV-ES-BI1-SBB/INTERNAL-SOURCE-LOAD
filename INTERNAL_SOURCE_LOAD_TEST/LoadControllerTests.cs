@@ -215,5 +215,33 @@ namespace INTERNAL_SOURCE_LOAD_TEST
             ClassicAssert.AreEqual(StatusCodes.Status400BadRequest, badRequestResult.StatusCode);
             ClassicAssert.AreEqual("No suitable transformer found for the provided data.", badRequestResult.Value);
         }
+        [Test]
+        public void Post_ExceptionDuringProcessing_ReturnsInternalServerError()
+        {
+            // Arrange
+            var transformerMock = new Mock<IJsonToSqlTransformer>();
+            transformerMock.Setup(t => t.CanHandle(It.IsAny<JsonElement>())).Returns(true);
+            transformerMock.Setup(t => t.Transform(It.IsAny<JsonElement>())).Throws(new Exception("Unexpected error"));
+
+            var controller = new LoadController(new List<IJsonToSqlTransformer> { transformerMock.Object });
+
+            var jsonString = @"
+        {
+          ""name"": ""Yverdon-les-Bains"",
+          ""departures"": []
+        }";
+
+            var jsonDocument = JsonDocument.Parse(jsonString);
+            var jsonElement = jsonDocument.RootElement;
+
+            // Act
+            var response = controller.Post(jsonElement);
+
+            // Assert
+            ClassicAssert.IsInstanceOf<ObjectResult>(response);
+            var objectResult = (ObjectResult)response;
+            ClassicAssert.AreEqual(StatusCodes.Status500InternalServerError, objectResult.StatusCode);
+            ClassicAssert.AreEqual("Error loading data: Unexpected error", objectResult.Value);
+        }
     }
 }   
