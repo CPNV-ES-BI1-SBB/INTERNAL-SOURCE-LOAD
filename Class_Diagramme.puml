@@ -1,0 +1,58 @@
+@startuml
+
+interface IJsonToSqlTransformer {
+    + bool CanHandle(JsonElement jsonData)
+    + string Transform(JsonElement jsonData)
+}
+
+interface ISqlExecutor {
+    + void Execute(string sqlQuery)
+}
+
+class TrainJsonToSqlTransformer implements IJsonToSqlTransformer {
+    + bool CanHandle(JsonElement jsonData)
+    + string Transform(JsonElement jsonData)
+    - string GenerateSql(TrainStation trainStation)
+}
+
+class TrainStation {
+    - string Name
+    - List<Departure> Departures
+}
+
+class Departure {
+    - string DepartureStationName
+    - string DestinationStationName
+    - List<string> ViaStationNames
+    - DateTime DepartureTime
+    - Train Train
+    - string Platform
+    - string? Sector
+}
+
+class Train {
+    - string G
+    - string? L
+}
+
+' Define LoadController
+class LoadController {
+    - IEnumerable<IJsonToSqlTransformer> _transformers
+    - ISqlExecutor _sqlExecutor
+    + LoadController(IEnumerable<IJsonToSqlTransformer> transformers, ISqlExecutor sqlExecutor)
+    + IActionResult Post(JsonElement jsonData)
+}
+
+' Define relationships
+'B
+TrainJsonToSqlTransformer --> TrainStation 
+'D
+TrainStation --o Departure
+'D
+Departure --o Train
+'C
+LoadController ..> IJsonToSqlTransformer
+'C
+LoadController ..> ISqlExecutor
+
+@enduml
