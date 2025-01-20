@@ -1,4 +1,4 @@
-﻿namespace INTERNAL_SOURCE_LOAD
+﻿namespace INTERNAL_SOURCE_LOAD.Models
 {
     /// <summary>
     /// Represents a train station with its associated city and departures.
