@@ -2,7 +2,7 @@
 {
     using MySql.Data.MySqlClient;
 
-    public class MariaDbExecutor : ISqlExecutor
+    public class MariaDbExecutor : IDatabaseExecutor
     {
         private readonly string _connectionString;
 
@@ -23,5 +23,18 @@
             using var command = new MySqlCommand(sqlQuery, connection);
             command.ExecuteNonQuery();
         }
+        public long ExecuteAndReturnId(string sqlQuery)
+        {
+            using var connection = new MySqlConnection(_connectionString);
+            connection.Open();
+
+            using var command = new MySqlCommand(sqlQuery, connection);
+            command.ExecuteNonQuery();
+
+            // Retrieve the last inserted ID
+            command.CommandText = "SELECT LAST_INSERT_ID();";
+            return Convert.ToInt64(command.ExecuteScalar());
+        }
+
     }
 }
