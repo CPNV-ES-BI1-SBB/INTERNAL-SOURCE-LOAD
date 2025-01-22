@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using INTERNAL_SOURCE_LOAD.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Collections;
 using System.Text.Json;
 
 namespace INTERNAL_SOURCE_LOAD.Controllers;
@@ -11,11 +13,13 @@ public class LoadController : ControllerBase
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly AppSettings _appSettings;
+    private readonly ISqlExecutor _sqlExecutor;
 
-    public LoadController(IServiceProvider serviceProvider, IOptions<AppSettings> appSettings)
+    public LoadController(IServiceProvider serviceProvider, IOptions<AppSettings> appSettings, ISqlExecutor sqlExecutor)
     {
         _serviceProvider = serviceProvider;
         _appSettings = appSettings.Value;
+        _sqlExecutor = sqlExecutor;
     }
 
     [HttpPost]
@@ -45,8 +49,30 @@ public class LoadController : ControllerBase
             // Transform JSON into the specified model type
             var model = transformer.Transform(jsonData);
 
-            // Return success response
-            return StatusCode(StatusCodes.Status201Created, $"Data transformed successfully into model type: {_appSettings.DefaultModel}");
+            if (model == null)
+            {
+                return BadRequest("Transformation resulted in a null model.");
+            }
+
+            // Generate SQL query
+            string tableName = targetType.Name;
+            string sqlQuery;
+
+            if (model is IEnumerable collection && !(model is string))
+            {
+                // Generate batched SQL for collection
+                sqlQuery = SqlInsertGenerator.GenerateInsertQueries(tableName, collection.Cast<object>());
+            }
+            else
+            {
+                // Generate SQL for a single object
+                sqlQuery = SqlInsertGenerator.GenerateInsertQuery(tableName, model);
+            }
+
+            // Execute the SQL query
+            _sqlExecutor.Execute(sqlQuery);
+
+            return StatusCode(StatusCodes.Status201Created, $"Data inserted into table: {tableName}");
         }
         catch (Exception ex)
         {
