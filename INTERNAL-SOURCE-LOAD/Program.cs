@@ -2,6 +2,7 @@ using INTERNAL_SOURCE_LOAD;
 using INTERNAL_SOURCE_LOAD.Models;
 using INTERNAL_SOURCE_LOAD.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,7 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings")); 
 builder.Services.AddTransient(typeof(IJsonToModelTransformer<>), typeof(JsonToModelTransformer<>));
 
-builder.Services.AddSingleton<ISqlExecutor, MariaDbExecutor>(sp =>
+builder.Services.AddSingleton<IDatabaseExecutor, MariaDbExecutor>(sp =>
     new MariaDbExecutor(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
