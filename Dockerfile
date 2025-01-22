@@ -31,5 +31,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
 WORKDIR /app
 # Define environment variable for connection string
 ENV ConnectionStrings__DefaultConnection="Server=host.docker.internal;Database=TrainSchedule;User=root;Password=root;"
+
 COPY --from=publish /app/out .
 ENTRYPOINT ["dotnet", "INTERNAL-SOURCE-LOAD.dll"]
