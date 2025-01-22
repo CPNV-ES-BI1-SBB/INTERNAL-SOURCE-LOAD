@@ -1,0 +1,29 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "*" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest 
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+        
+    - name: Build Docker image
+      run: docker build --target runtime -t internal-source-load:latest .
+
+    - name: Save Docker image to tar file
+      run: docker save -o internal-source-load.tar internal-source-load:latest
+
+    - name: Upload Docker image tar file
+      uses: actions/upload-artifact@v3
+      with:
+        name: internal-source-load-tar
+        path: internal-source-load.tar
