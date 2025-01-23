@@ -8,8 +8,6 @@
         + Post(jsonData : JsonElement ) : IActionResult
     }
 
-
-
     class Departure {
         + DepartureStationName : string 
         + DestinationStationName : string 
@@ -37,12 +35,10 @@
         + TableNameAttribute(tableName : string )
     }
 
-
     interface IDatabaseExecutor {
         + Execute(sqlQuery : string) : void
         + ExecuteAndReturnId(sqlQuery : string) : long
     }
-
     class MariaDbExecutor {
         - _connectionString : string
         + MariaDbExecutor(connectionString : string )
@@ -74,8 +70,5 @@
     TableNameAttribute *-- Train
     TableNameAttribute *-- TrainStation
     JsonToModelTransformer --|> IJsonToModelTransformer
-
-    
-
 
 @enduml
