@@ -7,15 +7,15 @@ using System.Text.Json;
 
 namespace INTERNAL_SOURCE_LOAD.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/v1/documents/load")]
 [ApiController]
 public class LoadController : ControllerBase
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly AppSettings _appSettings;
-    private readonly ISqlExecutor _sqlExecutor;
+    private readonly IDatabaseExecutor _sqlExecutor;
 
-    public LoadController(IServiceProvider serviceProvider, IOptions<AppSettings> appSettings, ISqlExecutor sqlExecutor)
+    public LoadController(IServiceProvider serviceProvider, IOptions<AppSettings> appSettings, IDatabaseExecutor sqlExecutor)
     {
         _serviceProvider = serviceProvider;
         _appSettings = appSettings.Value;
@@ -54,23 +54,35 @@ public class LoadController : ControllerBase
                 return BadRequest("Transformation resulted in a null model.");
             }
 
-            // Generate SQL query
+            // Generate SQL queries
             string tableName = targetType.Name;
-            string sqlQuery;
+            var sqlQueries = SqlInsertGenerator.GenerateInsertQueries(tableName, model);
 
-            if (model is IEnumerable collection && !(model is string))
+            // Step 3: Execute insert queries and track inserted IDs
+            var modelIds = new Dictionary<object, long>();
+            foreach (var query in sqlQueries)
             {
-                // Generate batched SQL for collection
-                sqlQuery = SqlInsertGenerator.GenerateInsertQueries(tableName, collection.Cast<object>());
+                // Execute the insert query and get the inserted ID
+                var insertedId = _sqlExecutor.ExecuteAndReturnId(query.Item1);
+
+                // Map the model instance to the ID
+                var modelInstance = query.Item2;
+                if (modelInstance != null)
+                {
+                    modelIds[modelInstance] = insertedId;
+                }
             }
-            else
+            List<string> sqlQueriesFK = new List<string>();
+            foreach (var modelInstance in modelIds.Keys)
             {
-                // Generate SQL for a single object
-                sqlQuery = SqlInsertGenerator.GenerateInsertQuery(tableName, model);
+                sqlQueriesFK.AddRange(SqlInsertGenerator.GenerateUpdateForeignKeysQueries(modelInstance, modelIds));
             }
 
-            // Execute the SQL query
-            _sqlExecutor.Execute(sqlQuery);
+            foreach (var query in sqlQueriesFK)
+            {
+                _sqlExecutor.Execute(query);
+            }
+
 
             return StatusCode(StatusCodes.Status201Created, $"Data inserted into table: {tableName}");
         }
@@ -79,4 +91,5 @@ public class LoadController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error processing data: {ex.Message}");
         }
     }
+    
 }

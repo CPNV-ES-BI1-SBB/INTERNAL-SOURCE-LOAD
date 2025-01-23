@@ -12,7 +12,8 @@ public class JsonToModelTransformer<T> : IJsonToModelTransformer<T>
 
         return JsonSerializer.Deserialize<T>(jsonData.GetRawText(), new JsonSerializerOptions
         {
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault
         }) ?? throw new ArgumentException($"Failed to deserialize JSON into {typeof(T).Name}.");
     }
 }

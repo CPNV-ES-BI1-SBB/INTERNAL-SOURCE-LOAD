@@ -2,7 +2,8 @@
 {
     public interface IDatabaseExecutor
     {
-        void ExecuteQuery(string query);
+        void Execute(string connectionString);
+        long ExecuteAndReturnId(string connectionString);
     }
 
 }
