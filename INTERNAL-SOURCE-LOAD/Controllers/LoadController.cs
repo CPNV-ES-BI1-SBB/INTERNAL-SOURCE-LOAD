@@ -58,11 +58,31 @@ public class LoadController : ControllerBase
             string tableName = targetType.Name;
             var sqlQueries = SqlInsertGenerator.GenerateInsertQueries(tableName, model);
 
-            // Execute each query
+            // Step 3: Execute insert queries and track inserted IDs
+            var modelIds = new Dictionary<object, long>();
             foreach (var query in sqlQueries)
+            {
+                // Execute the insert query and get the inserted ID
+                var insertedId = _sqlExecutor.ExecuteAndReturnId(query.Item1);
+
+                // Map the model instance to the ID
+                var modelInstance = query.Item2;
+                if (modelInstance != null)
+                {
+                    modelIds[modelInstance] = insertedId;
+                }
+            }
+            List<string> sqlQueriesFK = new List<string>();
+            foreach (var modelInstance in modelIds.Keys)
+            {
+                sqlQueriesFK.AddRange(SqlInsertGenerator.GenerateUpdateForeignKeysQueries(modelInstance, modelIds));
+            }
+
+            foreach (var query in sqlQueriesFK)
             {
                 _sqlExecutor.Execute(query);
             }
+
 
             return StatusCode(StatusCodes.Status201Created, $"Data inserted into table: {tableName}");
         }
@@ -71,5 +91,5 @@ public class LoadController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error processing data: {ex.Message}");
         }
     }
-
+    
 }
