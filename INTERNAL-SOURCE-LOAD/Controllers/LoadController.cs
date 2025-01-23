@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace INTERNAL_SOURCE_LOAD.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/v1/documents/load")]
 [ApiController]
 public class LoadController : ControllerBase
 {
