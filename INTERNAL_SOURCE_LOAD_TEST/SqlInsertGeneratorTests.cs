@@ -15,14 +15,14 @@ namespace INTERNAL_SOURCE_LOAD_TEST
         public class SimpleModel
         {
             public int Id { get; set; }
-            public string Name { get; set; }
+            public required string Name { get; set; }
         }
 
         public class ComplexModel
         {
             public int Id { get; set; }
-            public string Name { get; set; }
-            public List<SimpleModel> Items { get; set; }
+            public required string Name { get; set; }
+            public List<SimpleModel>? Items { get; set; }
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace INTERNAL_SOURCE_LOAD_TEST
             var result = SqlInsertGenerator.GenerateInsertQueries("SimpleTable", simpleModel);
 
             // Then
-            Assert.That(1, Is.EqualTo(result.Count));
+            Assert.That(result.Count, Is.EqualTo(1));
             Assert.That(valideQuery, Is.EqualTo(result[0].Query));
         }
 
@@ -63,7 +63,7 @@ namespace INTERNAL_SOURCE_LOAD_TEST
             var result = SqlInsertGenerator.GenerateInsertQueries("ComplexModel", complexModel);
 
             // Then
-            Assert.That(3, Is.EqualTo(result.Count));
+            Assert.That(result.Count, Is.EqualTo(3));
             Assert.That(valideQuery1, Is.EqualTo(result[2].Query));
             Assert.That(valideQuery2, Is.EqualTo(result[0].Query));
             Assert.That(valideQuery3, Is.EqualTo(result[1].Query));
@@ -74,14 +74,14 @@ namespace INTERNAL_SOURCE_LOAD_TEST
         public void GenerateInsertQueries_GivenNullObject_ThrowsArgumentNullException()
         {
             // Given
-            object nullModel = null;
+            object? nullModel = null;
 
             // When & Then
             var exception = Assert.Throws<ArgumentNullException>(() =>
                 SqlInsertGenerator.GenerateInsertQueries("Table", nullModel)
             );
 
-            Assert.That("Value cannot be null. (Parameter 'data')", Is.EqualTo(exception.Message));
+            Assert.That(exception.Message, Is.EqualTo("Value cannot be null. (Parameter 'data')"));
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace INTERNAL_SOURCE_LOAD_TEST
                 SqlInsertGenerator.GenerateInsertQueries("Table", simpleModels)
             );
 
-            Assert.That("Top-level collections are not supported for insert queries.", Is.EqualTo(exception.Message));
+            Assert.That(exception.Message, Is.EqualTo("Top-level collections are not supported for insert queries."));
         }
     }
 }
