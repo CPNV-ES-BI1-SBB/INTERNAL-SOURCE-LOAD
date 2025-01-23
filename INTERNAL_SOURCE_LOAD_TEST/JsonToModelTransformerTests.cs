@@ -38,7 +38,16 @@ namespace INTERNAL_SOURCE_LOAD_TEST
             Assert.That(result.Age, Is.EqualTo(30));
         }
 
-        
+        [Test]
+        public void Transform_InvalidJson_ThrowsArgumentException()
+        {
+            // Arrange
+            var invalidJson = JsonDocument.Parse("null").RootElement;
+
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => _transformer.Transform(invalidJson));
+            Assert.That(ex.Message, Is.EqualTo("Invalid JSON payload."));
+        }
 
         public class TestModel
         {
