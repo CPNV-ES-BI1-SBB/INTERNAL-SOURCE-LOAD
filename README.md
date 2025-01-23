@@ -18,6 +18,16 @@ This is the **Load** part.
 - Git version 2.39+ [Download](https://git-scm.com/)
 
 ### Getting started
+#### Build the project:
+```shell
+dotnet restore
+dotnet build
+```
+
+_With Docker_
+```shell
+docker build --target build -t build .
+```
 
 #### Run the api locally
 
@@ -28,7 +38,7 @@ dotnet run
 
 You can go to
 [http://localhost:5054/swagger/](http://localhost:5054/swagger/index.html) to
-see API endpoints.
+see API endpoints(api/v1/documents/load).
 
 #### Test projects:
 
