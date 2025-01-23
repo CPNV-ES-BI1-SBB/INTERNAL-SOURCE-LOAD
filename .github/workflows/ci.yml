@@ -23,7 +23,7 @@ jobs:
       run: docker save -o internal-source-load.tar internal-source-load:latest
 
     - name: Upload Docker image tar file
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: internal-source-load-tar
         path: internal-source-load.tar
