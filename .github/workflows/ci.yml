@@ -26,7 +26,7 @@ jobs:
       run: docker save -o database.tar database:latest
 
     - name: Upload Database Docker image tar file
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: database-tar
         path: database.tar
@@ -35,7 +35,7 @@ jobs:
       run: docker save -o internal-source-load.tar internal-source-load:latest
 
     - name: Upload Docker image tar file
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: internal-source-load-tar
         path: internal-source-load.tar
