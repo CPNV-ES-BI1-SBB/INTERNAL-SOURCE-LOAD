@@ -2,6 +2,6 @@
 {
     public class AppSettings
     {
-        public string DefaultModel { get; set; }
+        public string? DefaultModel { get; set; }
     }
 }
