@@ -20,7 +20,7 @@ jobs:
       run: docker build --target runtime -t internal-source-load:latest .
 
     - name: Build Database Docker image
-      run: docker build --build-arg DB_PASSWORD=${{ vars.DB_PASSWORD }} -t database:latest -f Database .
+      run: docker build --build-arg DB_PASSWORD=root -t database:latest -f Database .
 
     - name: Save Database Docker image to tar file
       run: docker save -o database.tar database:latest
