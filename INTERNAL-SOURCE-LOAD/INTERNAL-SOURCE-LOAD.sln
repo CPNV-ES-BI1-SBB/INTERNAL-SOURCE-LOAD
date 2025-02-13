@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "INTERNAL-SOURCE-LOAD", "INT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "INTERNAL-SOURCE-LOAD-TEST", "..\INTERNAL_SOURCE_LOAD_TEST\INTERNAL-SOURCE-LOAD-TEST.csproj", "{8BF66F97-2085-45F1-9B4F-96A833D34F4B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StressTest", "..\StressTest\StressTest.csproj", "{9CC85EA1-09CB-4DC8-921A-A08DA6A67302}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8BF66F97-2085-45F1-9B4F-96A833D34F4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BF66F97-2085-45F1-9B4F-96A833D34F4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BF66F97-2085-45F1-9B4F-96A833D34F4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CC85EA1-09CB-4DC8-921A-A08DA6A67302}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CC85EA1-09CB-4DC8-921A-A08DA6A67302}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CC85EA1-09CB-4DC8-921A-A08DA6A67302}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CC85EA1-09CB-4DC8-921A-A08DA6A67302}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
