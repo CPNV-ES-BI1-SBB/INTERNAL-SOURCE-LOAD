@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework.Legacy;
 
+//TODO NGY Everything is disable !!
+// Split data and logic in test class
 
 namespace INTERNAL_SOURCE_LOAD_TEST
 {

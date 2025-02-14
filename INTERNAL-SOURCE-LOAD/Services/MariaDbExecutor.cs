@@ -17,6 +17,7 @@
         /// <param name="sqlQuery">The SQL query to execute.</param>
         public void Execute(string sqlQuery)
         {
+            //TODO NGY - refactor (duplicate with lines 29-35)
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
 

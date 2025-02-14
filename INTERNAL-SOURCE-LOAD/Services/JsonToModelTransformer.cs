@@ -3,6 +3,7 @@ using System.Text.Json;
 
 public class JsonToModelTransformer<T> : IJsonToModelTransformer<T>
 {
+    //TODO NGY - Static method and class ?
     public T Transform(JsonElement jsonData)
     {
         if (jsonData.ValueKind == JsonValueKind.Undefined || jsonData.ValueKind == JsonValueKind.Null)

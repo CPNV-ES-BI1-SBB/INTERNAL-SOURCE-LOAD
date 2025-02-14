@@ -32,6 +32,7 @@ public class LoadController : ControllerBase
 
         try
         {
+            //TODO NGY - refactor needed (SRP)
             // Resolve the target type from the configuration
             var targetType = Type.GetType(_appSettings.DefaultModel);
             if (targetType == null)
@@ -88,6 +89,7 @@ public class LoadController : ControllerBase
         }
         catch (Exception ex)
         {
+            //TODO NGY Refer to your api framework to see how to handle generic exceptions.
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error processing data: {ex.Message}");
         }
     }

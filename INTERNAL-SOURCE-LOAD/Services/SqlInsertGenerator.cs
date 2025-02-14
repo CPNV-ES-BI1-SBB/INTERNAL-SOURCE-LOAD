@@ -156,7 +156,7 @@ namespace INTERNAL_SOURCE_LOAD.Services
                     }
                 }
             }
-
+            //TODO NGY - Don't comment on self-explanatory lines
             return queries; // Return the list of queries
         }
     }
